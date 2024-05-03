@@ -16,6 +16,12 @@ export default function ToDoList() {
       progress={60}
     />,
     <ToDo
+      topic="Thema3"
+      deadline="22/08/2024"
+      info="testen sfjsdjkjsadfjslkfjlkd asdjklfjsadfjksa jakdsfl;ksa"
+      progress={60}
+    />,
+    <ToDo
       topic="Thema4"
       deadline="22/08/2024"
       info="testen sfjsdjkjsadfjslkfjlkd asdjklfjsadfjksa jakdsfl;ksa"

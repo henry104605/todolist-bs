@@ -1,19 +1,23 @@
 import { Nav, Container, Navbar } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 export default function Navigation() {
   return (
-    <>
-      <Navbar bg="light" data-bs-theme="light">
-        <Container>
-          <Navbar.Brand href="#home">TO-DO</Navbar.Brand>
-          <Nav className="me-auto"></Nav>
-          <Nav>
-            <Nav.Link href="#home">NEW</Nav.Link>
-            <Nav.Link href="#features">IMPRESSUM</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-    </>
+    <Navbar bg="light" data-bs-theme="light">
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+          TO-DO
+        </Navbar.Brand>
+        <Nav className="me-auto"></Nav>
+        <Nav>
+          <Nav.Link as={Link} to="/new">
+            NEW
+          </Nav.Link>
+          <Nav.Link as={Link} to="/impressum">
+            IMPRESSUM
+          </Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
   );
 }
