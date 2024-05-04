@@ -1,5 +1,6 @@
 import { Button, Form, Container } from "react-bootstrap";
 import React, { useState } from "react";
+import ToDo from "../components/ToDo";
 
 export default function NewToDoPage() {
   const [formData, setFormData] = useState({
@@ -9,11 +10,23 @@ export default function NewToDoPage() {
     progress: 0,
   });
 
+  const [toDos, setToDos] = useState([]);
+
+  function deleteToDo(id) {
+    setToDos((currentTodos) => {
+      return currentTodos.filter((toDo) => toDo.id != id);
+    });
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Hier kannst du die Daten verarbeiten, z.B. an einen API-Endpunkt senden
-    console.log("Formular wurde abgesendet:", formData);
-    // Optional: Setze die Formulardaten zurück
+
+    setToDos((currentTodos) => {
+      return [...currentTodos, { id: crypto.randomUUID(), formData }];
+    });
+
+    console.log(toDos);
+
     setFormData({
       title: "",
       description: "",
@@ -79,6 +92,21 @@ export default function NewToDoPage() {
           ADD
         </Button>
       </Form>
+      <div className="mt-5">
+        {toDos.map((currToDo) => {
+          return (
+            <ToDo
+              delete={deleteToDo}
+              id={currToDo.id}
+              key={currToDo.id}
+              topic={currToDo.formData.title}
+              deadline={currToDo.formData.deadline}
+              info={currToDo.formData.description}
+              progress={currToDo.formData.progress}
+            />
+          );
+        })}
+      </div>
     </Container>
   );
 }
