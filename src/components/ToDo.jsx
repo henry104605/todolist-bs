@@ -1,4 +1,5 @@
 import { Button, Card, ProgressBar } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export default function ToDo(props) {
   return (
@@ -21,9 +22,11 @@ export default function ToDo(props) {
         >
           Delete
         </Button>
-        <Button className="me-2" variant="primary">
-          Edit
-        </Button>
+        <Link to="/new">
+          <Button className="me-2" variant="primary">
+            Edit
+          </Button>
+        </Link>
       </Card.Body>
       <Card.Footer className="text-muted">
         <ProgressBar now={props.progress} label={`${props.progress}%`} />

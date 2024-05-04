@@ -89,7 +89,7 @@ export default function NewToDoPage() {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          ADD
+          SUBMIT
         </Button>
       </Form>
       <div className="mt-5">
