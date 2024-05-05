@@ -7,7 +7,7 @@ export default function ImpressumPage() {
       <div className="mt-3">
         Aaron Kruse
         <br />
-        Attapon
+        Attapon Worachoti
         <br />
         Henry
       </div>
