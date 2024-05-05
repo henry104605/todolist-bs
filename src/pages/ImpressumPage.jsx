@@ -9,7 +9,7 @@ export default function ImpressumPage() {
         <br />
         Attapon Worachoti
         <br />
-        Henry
+        Henry Wolter
       </div>
     </Container>
   );
