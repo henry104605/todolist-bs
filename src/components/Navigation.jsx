@@ -16,8 +16,12 @@ export default function Navigation() {
           <Nav.Link as={Link} to="/impressum">
             IMPRESSUM
           </Nav.Link>
+
         </Nav>
+
       </Container>
+
     </Navbar>
+    
   );
 }
