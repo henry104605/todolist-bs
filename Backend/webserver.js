@@ -14,16 +14,16 @@ app.use(cors()); // Aktiviere CORS für alle Anfragen
 let todos = [
   {
     id: "1",
-    topic: "ToDo 1",
+    title: "ToDo 1",
     deadline: "2024-05-15",
-    info: "Beschreibung des Todos 1",
+    description: "Beschreibung des Todos 1",
     progress: 20,
   },
   {
     id: "2",
-    topic: "ToDo 2",
+    title: "ToDo 2",
     deadline: "2024-05-16",
-    info: "Beschreibung des Todos 2",
+    description: "Beschreibung des Todos 2",
     progress: 50,
   },
 ];

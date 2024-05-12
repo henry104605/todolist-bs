@@ -6,8 +6,8 @@ export default function ToDo(props) {
     <Card className="text-center">
       <Card.Body className="pt-4">
         <Card.Header>DEADLINE: {props.deadline}</Card.Header>
-        <Card.Title className="mt-3">{props.topic}</Card.Title>
-        <Card.Text>{props.info}</Card.Text>
+        <Card.Title className="mt-3">{props.title}</Card.Title>
+        <Card.Text>{props.description}</Card.Text>
         <Button
           onClick={() => props.delete(props.id)}
           className="me-2"

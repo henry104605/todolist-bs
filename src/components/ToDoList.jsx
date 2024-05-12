@@ -47,9 +47,9 @@ export default function ToDoList() {
             <ToDo
               delete={deleteToDo}
               id={todo.id}
-              topic={todo.topic}
+              title={todo.title}
               deadline={todo.deadline}
-              info={todo.info}
+              description={todo.description}
               progress={todo.progress}
             />
           </ListGroup.Item>
