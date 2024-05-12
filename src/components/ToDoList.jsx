@@ -16,25 +16,27 @@ export default function ToDoList() {
   function deleteToDo(id) {
     // Lokal das Todo löschen
     setTodos((currentTodos) => {
-      return currentTodos.filter((toDo) => toDo.id !== id);
-    });
+      const updatedTodos = currentTodos.filter((toDo) => toDo.id !== id);
 
-    // Aktualisierte Liste der Todos an den Server senden
-    fetch("http://localhost:5000/updateTodos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(todos), // Die aktualisierte Liste der Todos als JSON senden
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response not ok");
-        }
+      // Aktualisierte Liste der Todos an den Server senden
+      fetch("http://localhost:5000/updateTodos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTodos), // Die aktualisierte Liste der Todos als JSON senden
       })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response not ok");
+          }
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
+
+      return updatedTodos; // Das aktualisierte Array zurückgeben
+    });
   }
 
   return (
