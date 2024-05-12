@@ -50,6 +50,21 @@ app.post("/addTodo", (req, res) => {
   console.log("New Todo:", newTodo);
 });
 
+// Endpunkt zum Bearbeiten eines vorhandenen Todos
+app.put("/editTodo", (req, res) => {
+  const updatedTodo = req.body; // Das aktualisierte Todo aus dem Anfragekörper
+  const todoId = updatedTodo.id;
+
+  // Suche das Todo in der Liste und aktualisiere es, falls es gefunden wird
+  const index = todos.findIndex((todo) => todo.id == todoId);
+  if (index !== -1) {
+    todos[index] = updatedTodo;
+    res.sendStatus(200); // Erfolgsstatus (OK) als Antwort senden
+  } else {
+    res.status(404).send("Todo nicht gefunden"); // Fehlermeldung, falls das Todo nicht gefunden wurde
+  }
+});
+
 // Starte den Server
 app.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);

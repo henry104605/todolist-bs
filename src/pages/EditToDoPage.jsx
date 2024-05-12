@@ -1,30 +1,39 @@
 import { Button, Form, Container } from "react-bootstrap";
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
-export default function NewToDoPage() {
+export default function EditToDoPage() {
+  const location = useLocation(); // Props durch state mithilfe von location uebermittelt
+
+  const { pId, pTitle, pDescription, pDeadline, pProgress } = location.state; // state daten auslesen
+
+  // infos ins formula einlesen
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    deadline: "",
-    progress: 0,
+    title: pTitle,
+    description: pDescription,
+    deadline: pDeadline,
+    progress: pProgress,
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const newTodo = {
+    const updatedTodo = {
+      id: pId,
       title: formData.title,
       description: formData.description,
       deadline: formData.deadline,
       progress: formData.progress,
     };
 
-    fetch("http://localhost:5000/addTodo", {
-      method: "POST",
+    console.log(updatedTodo);
+    // updatedTodo an Server Endpunkt senden, damit er die Todos aktualisiert
+    fetch("http://localhost:5000/editTodo", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newTodo), // Todo als JSON senden
+      body: JSON.stringify(updatedTodo),
     })
       .then((response) => {
         if (!response.ok) {
@@ -32,9 +41,10 @@ export default function NewToDoPage() {
         }
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        console.error("Fehler beim Bearbeiten des Todos:", error);
       });
 
+    // Formular leeren
     setFormData({
       title: "",
       description: "",
@@ -97,7 +107,7 @@ export default function NewToDoPage() {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          ADD
+          EDIT
         </Button>
       </Form>
     </Container>

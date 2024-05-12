@@ -1,7 +1,22 @@
 import { Button, Card, ProgressBar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function ToDo(props) {
+  // navigiere zur /edit seite und uebergebe durch state die props mit
+  // damit man die infomratioen auch auf der edit seite hat
+  const navigationToEdit = useNavigate();
+  const handleClick = () => {
+    navigationToEdit("/edit", {
+      state: {
+        pId: props.id,
+        pTitle: props.title,
+        pDescription: props.description,
+        pDeadline: props.deadline,
+        pProgress: props.progress,
+      },
+    });
+  };
+
   return (
     <Card className="text-center">
       <Card.Body className="pt-4">
@@ -22,11 +37,10 @@ export default function ToDo(props) {
         >
           Delete
         </Button>
-        <Link to="/new">
-          <Button className="me-2" variant="primary">
-            Edit
-          </Button>
-        </Link>
+
+        <Button onClick={handleClick} className="me-2" variant="primary">
+          Edit
+        </Button>
       </Card.Body>
       <Card.Footer className="text-muted">
         <ProgressBar now={props.progress} label={`${props.progress}%`} />

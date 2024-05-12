@@ -10,6 +10,7 @@ import {
 import ToDoPage from "./pages/ToDoPage";
 import ImpressumPage from "./pages/ImpressumPage";
 import NewToDoPage from "./pages/NewToDoPage";
+import EditToDoPage from "./pages/EditToDoPage";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Layout from "./pages/Layout";
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<ToDoPage />} />
       <Route path="new" element={<NewToDoPage />} />
+      <Route path="edit" element={<EditToDoPage />} />
       <Route path="impressum" element={<ImpressumPage />} />
     </Route>
   )
