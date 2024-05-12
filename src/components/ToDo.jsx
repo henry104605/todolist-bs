@@ -31,8 +31,6 @@ export default function ToDo(props) {
       <Card.Footer className="text-muted">
         <ProgressBar now={props.progress} label={`${props.progress}%`} />
       </Card.Footer>
-
     </Card>
-
-  );  
+  );
 }
