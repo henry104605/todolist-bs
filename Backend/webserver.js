@@ -28,23 +28,26 @@ let todos = [
   },
 ];
 
+// Endpunkt Todosliste
+app.get("/todos", (req, res) => {
+  res.json(todos);
+});
+
+// Endpunkt delete ToDo
 app.post("/updateTodos", (req, res) => {
   const updatedTodos = req.body;
   todos = updatedTodos; // Die aktualisierte Liste der Todos im Server aktualisieren
   res.sendStatus(200); // Erfolgsstatus (OK) als Antwort senden
 });
 
-// Route zum Abrufen aller ToDos
-app.get("/todos", (req, res) => {
-  res.json(todos);
-});
-
-// Route zum Hinzufügen eines neuen ToDos
-app.post("/todos", (req, res) => {
+// Endpunkt neues Todo hinzufuegen
+app.post("/addTodo", (req, res) => {
   const newTodo = req.body;
-  newTodo.id = crypto.randomUUID(); // Generiere eine eindeutige ID für das neue ToDo
+  newTodo.id = crypto.randomUUID(); // Generiere eine eindeutige ID
   todos.push(newTodo);
-  res.status(201);
+  res.status(200);
+
+  console.log("New Todo:", newTodo);
 });
 
 // Starte den Server

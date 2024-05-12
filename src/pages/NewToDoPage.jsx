@@ -10,22 +10,31 @@ export default function NewToDoPage() {
     progress: 0,
   });
 
-  const [toDos, setToDos] = useState([]);
-
-  function deleteToDo(id) {
-    setToDos((currentTodos) => {
-      return currentTodos.filter((toDo) => toDo.id != id);
-    });
-  }
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    setToDos((currentTodos) => {
-      return [...currentTodos, { id: crypto.randomUUID(), formData }];
-    });
+    const newTodo = {
+      title: formData.title,
+      description: formData.description,
+      deadline: formData.deadline,
+      progress: formData.progress,
+    };
 
-    console.log(toDos);
+    fetch("http://localhost:5000/addTodo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTodo), // Todo als JSON senden
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response not ok");
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
 
     setFormData({
       title: "",
@@ -92,21 +101,6 @@ export default function NewToDoPage() {
           SUBMIT
         </Button>
       </Form>
-      <div className="mt-5">
-        {toDos.map((currToDo) => {
-          return (
-            <ToDo
-              delete={deleteToDo}
-              id={currToDo.id}
-              key={currToDo.id}
-              topic={currToDo.formData.title}
-              deadline={currToDo.formData.deadline}
-              info={currToDo.formData.description}
-              progress={currToDo.formData.progress}
-            />
-          );
-        })}
-      </div>
     </Container>
   );
 }
