@@ -14,29 +14,28 @@ export default function ToDoList() {
   }, []); // Leeres Array als Abhängigkeit, damit der Effekt nur einmal beim ersten Rendern ausgeführt wird
 
   function deleteToDo(id) {
-    // Lokal das Todo löschen
-    setTodos((currentTodos) => {
-      const updatedTodos = currentTodos.filter((toDo) => toDo.id !== id);
-
-      // Aktualisierte Liste der Todos an den Server senden
-      fetch("http://localhost:5000/updateTodos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedTodos), // Die aktualisierte Liste der Todos als JSON senden
+    // Das zu löschende Todo an den Server senden
+    fetch("http://localhost:5000/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id }), // id des zu löschenden Todos als JSON senden
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response not ok");
+        }
+        // aktualisierte Liste der Todos empfangen
+        return response.json();
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response not ok");
-          }
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-        });
-
-      return updatedTodos; // Das aktualisierte Array zurückgeben
-    });
+      .then((updatedTodos) => {
+        // Zustand der Anwendung mit den aktualisierten Todos aktualisieren
+        setTodos(updatedTodos);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   }
 
   return (

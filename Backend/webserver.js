@@ -2,52 +2,94 @@ import express from "express";
 import bodyParser from "body-parser";
 import crypto from "crypto";
 import cors from "cors";
+import sqlite3 from "sqlite3";
 
 const app = express();
 const PORT = 5000;
+
+// SQLite-Datenbankverbindung herstellen
+const db = new sqlite3.Database("todos.db");
 
 // Middleware für das Parsen von JSON-Anfragen
 app.use(bodyParser.json());
 app.use(cors()); // Aktiviere CORS für alle Anfragen
 
-// Dummy-Daten für ToDos (zum Testen)
-let todos = [
-  {
-    id: "1",
-    title: "ToDo 1",
-    deadline: "2024-05-15",
-    description: "Beschreibung des Todos 1",
-    progress: 20,
-  },
-  {
-    id: "2",
-    title: "ToDo 2",
-    deadline: "2024-05-16",
-    description: "Beschreibung des Todos 2",
-    progress: 50,
-  },
-];
+// Tabelle für Todos erstellen
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS todos (
+      id TEXT PRIMARY KEY,
+      title TEXT,
+      deadline TEXT,
+      description TEXT,
+      progress INTEGER
+    )
+  `);
+});
 
 // Endpunkt Todosliste
 app.get("/todos", (req, res) => {
-  res.json(todos);
+  // datenbankabfrage um Todos abzurufen
+  db.all("SELECT * FROM todos", (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      res.json(rows);
+    }
+  });
 });
 
-// Endpunkt delete ToDo
-app.post("/updateTodos", (req, res) => {
-  const updatedTodos = req.body;
-  todos = updatedTodos; // Die aktualisierte Liste der Todos im Server aktualisieren
-  res.sendStatus(200); // Erfolgsstatus (OK) als Antwort senden
+// Endpunkt um ein todo aus der datenbank zu loeschen
+app.post("/delete", (req, res) => {
+  const idToDelete = req.body.id;
+
+  // datenbankanfrange fuers loeschen des todos durch die id
+  db.run(`DELETE FROM todos WHERE id = ?`, [idToDelete], (err) => {
+    if (err) {
+      console.error("Fehler beim Löschen des Todos:", err);
+      res.sendStatus(500);
+    } else {
+      console.log("Todo gelöscht");
+
+      // aktualisierte Liste der todos an client zurueck senden
+      db.all("SELECT * FROM todos", (err, rows) => {
+        if (err) {
+          console.error("Fehler beim Abrufen der Todos:", err);
+          res.sendStatus(500);
+        } else {
+          res.json(rows); // Die aktualisierte Liste der Todos als JSON zurücksenden
+        }
+      });
+    }
+  });
 });
 
 // Endpunkt neues Todo hinzufuegen
 app.post("/addTodo", (req, res) => {
   const newTodo = req.body;
-  newTodo.id = crypto.randomUUID(); // Generiere eine eindeutige ID
-  todos.push(newTodo);
-  res.status(200);
+  newTodo.id = crypto.randomUUID(); // generiere eine eindeutige ID
 
-  console.log("New Todo:", newTodo);
+  // datenbankanfrange um ein neues todo der tabelle hinzuzufuegen
+  db.run(
+    "INSERT INTO todos (id, title, deadline, description, progress) VALUES (?, ?, ?, ?, ?)",
+    [
+      newTodo.id,
+      newTodo.title,
+      newTodo.deadline,
+      newTodo.description,
+      newTodo.progress,
+    ],
+    (err) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        console.log("New Todo:", newTodo);
+        res.status(200).send(newTodo);
+      }
+    }
+  );
 });
 
 // Endpunkt zum Bearbeiten eines vorhandenen Todos
@@ -55,14 +97,25 @@ app.put("/editTodo", (req, res) => {
   const updatedTodo = req.body; // Das aktualisierte Todo aus dem Anfragekörper
   const todoId = updatedTodo.id;
 
-  // Suche das Todo in der Liste und aktualisiere es, falls es gefunden wird
-  const index = todos.findIndex((todo) => todo.id == todoId);
-  if (index !== -1) {
-    todos[index] = updatedTodo;
-    res.sendStatus(200); // Erfolgsstatus (OK) als Antwort senden
-  } else {
-    res.status(404).send("Todo nicht gefunden"); // Fehlermeldung, falls das Todo nicht gefunden wurde
-  }
+  // datenbankabfrage um das Todo zu aktualisieren
+  db.run(
+    "UPDATE todos SET title = ?, deadline = ?, description = ?, progress = ? WHERE id = ?",
+    [
+      updatedTodo.title,
+      updatedTodo.deadline,
+      updatedTodo.description,
+      updatedTodo.progress,
+      todoId,
+    ],
+    (err) => {
+      if (err) {
+        console.error(err);
+        res.status(404).send("Todo nicht gefunden");
+      } else {
+        res.sendStatus(200); // Erfolgsstatus OK
+      }
+    }
+  );
 });
 
 // Starte den Server
